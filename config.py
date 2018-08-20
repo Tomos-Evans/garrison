@@ -13,4 +13,4 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
-    USE_GPIO=False
+    FAKE_GPIO=True

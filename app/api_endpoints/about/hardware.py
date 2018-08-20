@@ -6,6 +6,6 @@ class Res(Resource):
     @ns.doc("Hardware specs relating to the trolley")
     def get(self):
         return {
-            'topSpeed': '0.15m/s,
+            'topSpeed': '0.15m/s',
             'range': '1m',
         }
