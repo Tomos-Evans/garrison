@@ -14,3 +14,7 @@ class Config():
 
 class DevelopmentConfig(Config):
     FAKE_GPIO=True
+
+class TestingConfig(DevelopmentConfig):
+    TESTING=True
+    SQLALCHEMY_DATABASE_URI='sqlite://'
