@@ -11,4 +11,4 @@ class TestMotorMovement(TestCase):
         self.assertEqual(self.motor.move(10, talk=False), 10)
 
     def test_negative(self):
-        self.assertEqual(self.motor.move(-10, talk=False), -10)
+        self.assertEqual(self.motor.move(-10, talk=False), 10)
