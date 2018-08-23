@@ -7,10 +7,15 @@ load_dotenv(os.path.join(base_dir, '.env'))
 class Config():
     # General Flask variables
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'development-secret-key'
+    API_VERSION = 0.1
 
     # Database variables
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(base_dir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Mechanical
+    FAKE_GPIO = os.environ.get('FAKE_GPIO') or False
+
 
 class DevelopmentConfig(Config):
     FAKE_GPIO=True
