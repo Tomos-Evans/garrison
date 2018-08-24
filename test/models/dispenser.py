@@ -39,3 +39,12 @@ class TestDispenserVolume(TestCase):
     def test_has_used(self):
         self.assertEqual(self.dispenser.has_used(100), 900)
         self.assertRaises(Exception, lambda : self.dispenser.has_used(-1))
+
+class TestDispeserDispense(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.ingredient = Ingredient.from_params('water', alcoholic=False)
+        self.dispenser = Dispenser.from_params('water', self.ingredient, 1000)
+
+    def test_dispense_abstract(self):
+        self.assertRaises(NotImplementedError, lambda :self.dispenser.dispense(100))

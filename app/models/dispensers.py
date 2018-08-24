@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from app import db
 
 class Dispenser(db.Model):
@@ -32,3 +33,7 @@ class Dispenser(db.Model):
         self.volume -= amount
         db.session.commit()
         return self.volume
+
+    @abstractmethod
+    def dispense(self, amount):
+        raise NotImplementedError
