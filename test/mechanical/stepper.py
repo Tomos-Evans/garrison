@@ -1,6 +1,6 @@
 from test import TestCase
 from app.constants import STEPS_PER_CM
-class TestMovement(TestCase):
+class TestStepperMovement(TestCase):
     def setUp(self):
         super().setUp()
         from app.mechanical.stepper import Stepper

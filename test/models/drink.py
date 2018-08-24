@@ -21,7 +21,7 @@ class TestDrinkCreation(TestCase):
         self.assertTrue(alc.alcoholic)
         self.assertFalse(not_alc.alcoholic)
 
-class TestOperations(TestCase):
+class TestDrinkOperations(TestCase):
     def setUp(self):
         super().setUp()
         self.ingredient = Ingredient.from_params('water', alcoholic=False)
