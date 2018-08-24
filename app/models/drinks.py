@@ -1,4 +1,5 @@
 from app import db
+from app.models.dispensers import Dispenser
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -6,6 +7,7 @@ class Ingredient(db.Model):
     alcoholic = db.Column(db.Boolean(), index=True, nullable=False)
     abs = db.Column(db.Integer())
     drinkComponents = db.relationship('DrinkComponent',  backref='ingredient', lazy='dynamic')
+    dispenser_id      = db.Column(db.Integer, db.ForeignKey('dispenser.id'), nullable=True)
 
     def __str__(self):
         if self.alcoholic:
@@ -15,9 +17,6 @@ class Ingredient(db.Model):
 
     def __repr__(self):
         return "<Ingredient " + self.name + " >"
-
-    def __eq__(self, other):
-        return self.name == other.name and self.alcoholic == other.alcoholic
 
     @classmethod
     def from_params(cls, name, alcoholic, abs=None):
