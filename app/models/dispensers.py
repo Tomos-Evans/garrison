@@ -20,3 +20,15 @@ class Dispenser(db.Model):
     def change_ingredient(self, ingredient):
         self.ingredient = ingredient
         db.session.commit()
+
+    def has(self, amount):
+        if amount <= 0:
+            raise Exception
+        return self.volume >= amount
+
+    def has_used(self, amount):
+        if amount <= 0:
+            raise Exception
+        self.volume -= amount
+        db.session.commit()
+        return self.volume
