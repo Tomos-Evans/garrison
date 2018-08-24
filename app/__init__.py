@@ -19,6 +19,8 @@ def create_app(config):
                 description='The backend API to interface with The Garrison.',
                 prefix='/api')
 
+    api.namespaces.pop(0)
+
     from app.apis.about import ns as about_ns
     api.add_namespace(about_ns)
 
