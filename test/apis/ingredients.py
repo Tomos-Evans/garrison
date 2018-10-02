@@ -13,19 +13,22 @@ class TestGet(ApiTestCase):
         target = {
             'ingredients': [
                 {
-                    'href': '/api/ingredients/'+Ingredient.query.all()[0].ref,
+                    'location': '/api/ingredients/'+Ingredient.query.all()[0].ref,
+                    'ref': Ingredient.query.all()[0].ref,
                     'name': 'vodka',
                     'alcoholic': True,
                     'abs': 40,
                 },
                 {
-                    'href': '/api/ingredients/'+Ingredient.query.all()[1].ref,
+                    'location': '/api/ingredients/'+Ingredient.query.all()[1].ref,
+                    'ref': Ingredient.query.all()[1].ref,
                     'name': 'gin',
                     'alcoholic': True,
                     'abs': 35,
                 },
                 {
-                    'href': '/api/ingredients/'+Ingredient.query.all()[2].ref,
+                    'location': '/api/ingredients/'+Ingredient.query.all()[2].ref,
+                    'ref': Ingredient.query.all()[2].ref,
                     'name': 'orange juice',
                     'alcoholic': False,
                     'abs': None,
@@ -38,7 +41,8 @@ class TestGet(ApiTestCase):
         ref = Ingredient.query.all()[0].ref
         response = self.client.get('/api/ingredients/'+ref)
         target = {
-            'href': '/api/ingredients/'+ref,
+            'location': '/api/ingredients/'+ref,
+            'ref': ref,
             'name': 'vodka',
             'alcoholic': True,
             'abs': 40,
