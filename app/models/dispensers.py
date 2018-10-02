@@ -20,8 +20,9 @@ class Dispenser(db.Model):
 
         return d
 
-    def change_ingredient(self, ingredient):
+    def change_ingredient(self, ingredient, volume):
         self.ingredient = ingredient
+        self.volume = volume
         db.session.commit()
 
     def has(self, amount):

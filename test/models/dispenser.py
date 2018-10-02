@@ -19,10 +19,11 @@ class TestDispenserCreation(TestCase):
         d = Dispenser.from_params(0, 'water', self.ingredient, 1000)
         i = Ingredient.from_params('juice', alcoholic=False)
 
-        d.change_ingredient(i)
+        d.change_ingredient(i, 500)
 
         self.assertEqual(d.ingredient, i)
         self.assertEqual(i.dispenser, d)
+        self.assertEqual(d.volume, 500)
 
 class TestDispenserVolume(TestCase):
     def setUp(self):
