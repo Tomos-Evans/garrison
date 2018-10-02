@@ -1,5 +1,5 @@
 import json
-from flask_restplus import Resource, Namespace
+from flask_restplus import Resource, Namespace, abort
 from flask import current_app
 
 from app.models.drinks import Ingredient
@@ -15,3 +15,12 @@ class Ingredients(Resource):
 
     def post(self):
         pass
+
+@ns.route('/<ref>')
+class SingleIngredient(Resource):
+    def get(self, ref):
+        i = Ingredient.query.filter_by(ref=ref).first()
+        if i:
+            return i.as_json()
+        else:
+            abort(404, "No ingredient with ref: " + ref)
