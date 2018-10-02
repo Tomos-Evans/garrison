@@ -3,13 +3,15 @@ from app import db
 
 class Dispenser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    index = db.Column(db.Integer, unique=True, index=True, nullable=False)
     name = db.Column(db.String(15), unique=True, index=True, nullable=False)
     volume = db.Column(db.Integer, nullable=False)
     ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False)
 
     @classmethod
-    def from_params(cls, name, ingredient, volume):
+    def from_params(cls, index, name, ingredient, volume):
         d = cls()
+        d.index = index
         d.name = name
         d.ingredient = ingredient
         d.volume = volume
