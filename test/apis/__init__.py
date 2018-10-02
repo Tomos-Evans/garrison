@@ -6,3 +6,4 @@ class ApiTestCase(TestCase):
         self.client = self.app.test_client()
 
 from .ingredients import *
+from .drinks import *

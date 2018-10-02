@@ -32,7 +32,8 @@ class Ingredient(db.Model):
 
     def as_json(self):
         return {
-            'href': url_for('ingredients_ingredients') +self.ref,
+            'location': url_for('ingredients_ingredients') +self.ref,
+            'ref': self.ref,
             'name': self.name,
             'alcoholic': self.alcoholic,
             'abs': self.abs
@@ -58,8 +59,15 @@ class DrinkComponent(db.Model):
         db.session.commit()
         return dc
 
+    def as_json(self):
+        return {
+            'ingredient': self.ingredient.as_json(),
+            'measure': self.measure,
+        }
+
 class Drink(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    ref =db.Column(db.String(36), nullable=False, default=str(uuid.uuid4()))
     name = db.Column(db.String(15), unique=True, index=True, nullable=False)
     components = db.relationship('DrinkComponent',  backref='drink', lazy='dynamic')
     alcoholic = db.Column(db.Boolean(), index=True, nullable=False)
@@ -80,3 +88,11 @@ class Drink(db.Model):
         db.session.add(d)
         db.session.commit()
         return d
+
+    def as_json(self):
+        return {
+            'location': url_for('drinks_drinks') +self.ref,
+            'ref': self.ref,
+            'name': self.name,
+            'components': [c.as_json() for c in self.components]
+        }

@@ -13,6 +13,7 @@ class TestDrinkCreation(TestCase):
         drink = Drink.from_params('drink1', [self.drink_component, self.drink_component2])
 
         self.assertEqual(drink.components.all(), [self.drink_component, self.drink_component2])
+        self.assertTrue(self.drink_component.drink == drink)
 
     def test_alcoholic(self):
         alc = Drink.from_params('alc', [self.drink_component, self.drink_component2])
