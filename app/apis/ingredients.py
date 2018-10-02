@@ -19,6 +19,9 @@ class Ingredients(Resource):
         }
 
     @ns.doc(parser=post_parser)
+    @ns.response(201, 'Created')
+    @ns.response(400, 'Alcoholic drinks must specify ABS')
+    @ns.response(409, 'Name conflict')
     def post(self):
         args = post_parser.parse_args()
         name = args['name']
@@ -28,12 +31,14 @@ class Ingredients(Resource):
         if alcoholic and not abs:
             abort(400, "alcoholic drinks must specify ABS")
         if Ingredient.query.filter_by(name=name).first():
-            abort(401, "Name already in use")
+            abort(409, "Name already in use")
         i = Ingredient.from_params(name, alcoholic, abs)
         return make_response(jsonify(href=url_for('ingredients_ingredients') + i.ref), 201)
 
 @ns.route('/<ref>')
 class SingleIngredient(Resource):
+    @ns.response(200, 'Ok')
+    @ns.response(404, 'Not found')
     def get(self, ref):
         i = Ingredient.query.filter_by(ref=ref).first()
         if i:
