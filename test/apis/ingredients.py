@@ -48,3 +48,35 @@ class TestGet(ApiTestCase):
     def test_one_doesnt_exist(self):
         response = self.client.get('/api/ingredients/not-a-ref')
         self.assertEqual(response.status_code, 404)
+
+    def test_ing_post(self):
+        a = {
+            'name': 'new ing',
+            'alcoholic': True,
+            'abs': 12
+        }
+        b = {
+            'name': 'new ing2',
+            'alcoholic': False
+        }
+        response = self.client.post('/api/ingredients/', json=a)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post('/api/ingredients/', json=b)
+        self.assertEqual(response.status_code, 201)
+
+    def test_abs_requirement(self):
+        a = {
+            'name': 'new ing',
+            'alcoholic': True
+        }
+        response = self.client.post('/api/ingredients/', json=a)
+        self.assertEqual(response.status_code, 400)
+
+    def test_ing_name_confilct(self):
+        a = {
+            'name': 'vodka',
+            'alcoholic': True,
+            'abs': 1
+        }
+        response = self.client.post('/api/ingredients/', json=a)
+        self.assertEqual(response.status_code, 409)
