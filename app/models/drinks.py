@@ -1,8 +1,11 @@
+import uuid
 from app import db
 from app.models.dispensers import Dispenser
+from flask import url_for
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    ref =db.Column(db.String(36), nullable=False, default=str(uuid.uuid4()))
     name = db.Column(db.String(15), unique=True, index=True, nullable=False)
     alcoholic = db.Column(db.Boolean(), index=True, nullable=False)
     abs = db.Column(db.Integer())
@@ -26,6 +29,14 @@ class Ingredient(db.Model):
         db.session.add(i)
         db.session.commit()
         return i
+
+    def as_json(self):
+        return {
+            'href': url_for('ingredients_ingredients') +self.ref,
+            'name': self.name,
+            'alcoholic': self.alcoholic,
+            'abs': self.abs
+        }
 
 class DrinkComponent(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 
 scratch.py
+app.db

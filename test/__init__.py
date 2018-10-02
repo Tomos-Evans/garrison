@@ -16,3 +16,4 @@ class TestCase(unittest.TestCase):
 
 from test.mechanical import *
 from test.models import *
+from test.apis import *
