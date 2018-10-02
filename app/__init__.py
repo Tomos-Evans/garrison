@@ -23,6 +23,8 @@ def create_app(config):
 
     from app.apis.about import ns as about_ns
     api.add_namespace(about_ns)
+    from app.apis.ingredients import ns as ingredient_ns
+    api.add_namespace(ingredient_ns)
 
     api.init_app(app)
     return app
