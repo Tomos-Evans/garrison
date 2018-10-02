@@ -25,6 +25,8 @@ def create_app(config):
     api.add_namespace(about_ns)
     from app.apis.ingredients import ns as ingredient_ns
     api.add_namespace(ingredient_ns)
+    from app.apis.drinks import ns as drinks_ns
+    api.add_namespace(drinks_ns)
 
     api.init_app(app)
     return app
