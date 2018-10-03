@@ -31,8 +31,7 @@ class Dispenser(db.Model):
         return self.volume >= amount
 
     def has_used(self, amount):
-        if amount <= 0:
-            raise Exception
+        assert self.has(amount)
         self.volume -= amount
         db.session.commit()
         return self.volume
