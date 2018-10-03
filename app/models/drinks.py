@@ -37,9 +37,9 @@ class Ingredient(db.Model):
         return {
             'location': self.location(),
             'ref': self.ref,
-            'name': self.name,
-            'alcoholic': self.alcoholic,
-            'abs': self.abs
+            'name':self.name,
+            'alcoholic':self.alcoholic,
+            'abs':self.abs
         }
 
 class DrinkComponent(db.Model):
@@ -92,9 +92,12 @@ class Drink(db.Model):
         db.session.commit()
         return d
 
+    def location(self):
+        return url_for('drinks_drinks') + self.ref
+
     def as_json(self):
         return {
-            'location': url_for('drinks_drinks') +self.ref,
+            'location':self.location(),
             'ref': self.ref,
             'name': self.name,
             'components': [c.as_json() for c in self.components]

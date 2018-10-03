@@ -1,18 +1,17 @@
 from abc import abstractmethod
 from app import db
+from flask import url_for
 
 class Dispenser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer, unique=True, index=True, nullable=False)
-    name = db.Column(db.String(15), unique=True, index=True, nullable=False)
     volume = db.Column(db.Integer, nullable=False)
-    ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False)
+    ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False, lazy='select')
 
     @classmethod
-    def from_params(cls, index, name, ingredient, volume):
+    def from_params(cls, index, ingredient, volume):
         d = cls()
         d.index = index
-        d.name = name
         d.ingredient = ingredient
         d.volume = volume
         db.session.add(d)
@@ -38,11 +37,14 @@ class Dispenser(db.Model):
 
     def as_json(self):
         return {
-            'index': self.index,
-            'name': self.name,
-            'volume': self.volume,
-            'ingredient': self.ingredient.location()
+            'location':self.location(),
+            'index':self.index,
+            'volume':self.volume,
+            'ingredient':self.ingredient.location()
         }
+
+    def location(self):
+        return url_for('dispensers_dispensers') + str(self.index)
 
     @abstractmethod
     def dispense(self, amount):
