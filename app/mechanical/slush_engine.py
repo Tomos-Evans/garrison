@@ -13,9 +13,14 @@ class FakeMotor:
 
     def isBusy(self):
         return False
-        
+
+class FakeBoard:
+    def setIOState(self, a, b, c):
+        pass
+
 if FAKE_GPIO:
     motor = FakeMotor()
+    board = FakeBoard()
 else:
     import Slush
     from app import constants
