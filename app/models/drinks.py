@@ -21,6 +21,9 @@ class Ingredient(db.Model):
     def __repr__(self):
         return "<Ingredient " + self.name + " >"
 
+    def location(self):
+        return url_for('ingredients_ingredients') + self.ref
+
     @classmethod
     def from_params(cls, name, alcoholic, abs=None):
         if alcoholic and abs == None:
@@ -32,7 +35,7 @@ class Ingredient(db.Model):
 
     def as_json(self):
         return {
-            'location': url_for('ingredients_ingredients') +self.ref,
+            'location': self.location(),
             'ref': self.ref,
             'name': self.name,
             'alcoholic': self.alcoholic,

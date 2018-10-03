@@ -49,3 +49,19 @@ class TestDispeserDispense(TestCase):
 
     def test_dispense_abstract(self):
         self.assertRaises(NotImplementedError, lambda :self.dispenser.dispense(100))
+
+class TestDispenserIndex(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.ingredient = Ingredient.from_params('water', alcoholic=False)
+        self.dispenser1 = Dispenser.from_params(1, 'water1', self.ingredient, 1000)
+        self.dispenser2 = Dispenser.from_params(2, 'water2', self.ingredient, 1000)
+
+    def test_swap_location(self):
+        Dispenser.swap_dispenser_location(self.dispenser1, self.dispenser2)
+
+        self.assertEqual(self.dispenser1.index, 2)
+        self.assertEqual(self.dispenser2.index, 1)
+
+    def test_swap_location_with_self(self):
+        Dispenser.swap_dispenser_location(self.dispenser1, self.dispenser1)

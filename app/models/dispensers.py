@@ -36,6 +36,24 @@ class Dispenser(db.Model):
         db.session.commit()
         return self.volume
 
+    def as_json(self):
+        return {
+            'index': self.index,
+            'name': self.name,
+            'volume': self.volume,
+            'ingredient': self.ingredient.location()
+        }
+
     @abstractmethod
     def dispense(self, amount):
         raise NotImplementedError
+
+    @staticmethod
+    def swap_dispenser_location(d1, d2):
+        l1 = d1.index
+        l2 = d2.index
+        d2.index = -1
+        db.session.commit()
+        d1.index = l2
+        d2.index = l1
+        db.session.commit()
