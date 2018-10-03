@@ -47,8 +47,14 @@ class TestDispeserDispense(TestCase):
         self.ingredient = Ingredient.from_params('water', alcoholic=False)
         self.dispenser = Dispenser.from_params(0, self.ingredient, 1000)
 
-    def test_dispense_abstract(self):
-        self.assertRaises(NotImplementedError, lambda :self.dispenser.dispense(100))
+    def test_pass_in_function(self):
+        d1 = Dispenser.from_params(1, self.ingredient, 1000, dispense_function=lambda a: 1)
+        d2 = Dispenser.from_params(2, self.ingredient, 1000, dispense_function=lambda a: 2)
+
+        self.assertEqual(d1.dispense(100), 1)
+        self.assertEqual(d2.dispense(100), 2)
+        self.assertEqual(d1.volume, 900)
+
 
 class TestDispenserIndex(TestCase):
     def setUp(self):

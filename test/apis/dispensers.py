@@ -22,14 +22,14 @@ class TestDispenser(ApiTestCase):
         response = self.client.get('/api/dispensers/-1')
         self.assertEqual(response.status_code, 404)
 
-    def test_post(self):
-        response = self.client.post('/api/dispensers/', json={'index':2, 'ingredient':self.i1.ref, 'volume': 100})
-        self.assertEqual(response.status_code, 201)
-
-    def test_post_to_existing(self):
-        response = self.client.post('/api/dispensers/', json={'index':1, 'ingredient':self.i1.ref, 'volume': 100})
-        self.assertEqual(response.status_code, 409)
-
-    def test_post_invalid_ing(self):
-        response = self.client.post('/api/dispensers/', json={'index':2, 'ingredient':'no', 'volume': 100})
-        self.assertEqual(response.status_code, 404)
+    # def test_post(self):
+    #     response = self.client.post('/api/dispensers/', json={'index':2, 'ingredient':self.i1.ref, 'volume': 100})
+    #     self.assertEqual(response.status_code, 201)
+    #
+    # def test_post_to_existing(self):
+    #     response = self.client.post('/api/dispensers/', json={'index':1, 'ingredient':self.i1.ref, 'volume': 100})
+    #     self.assertEqual(response.status_code, 409)
+    #
+    # def test_post_invalid_ing(self):
+    #     response = self.client.post('/api/dispensers/', json={'index':2, 'ingredient':'no', 'volume': 100})
+    #     self.assertEqual(response.status_code, 404)
