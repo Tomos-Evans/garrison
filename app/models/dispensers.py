@@ -13,7 +13,7 @@ class Dispenser(db.Model):
     ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False, lazy='select')
 
     @classmethod
-    def from_params(cls, index, ingredient, volume, type='optic', dispense_function=lambda a: None):
+    def from_params(cls, index, ingredient=None, volume=0, type='optic', dispense_function=lambda a: None):
         d = cls()
         d.index = index
         d.ingredient = ingredient

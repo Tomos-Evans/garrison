@@ -79,5 +79,8 @@ class SingleDispenser(Resource):
             d.change_ingredient(i, volume)
             d.change_type_to('optic')
             return make_response(jsonify(d.as_json()), 200)
+        if d.type != 'empty' and volume != None and volume >=0:
+            d.update_volume(volume)
+            return make_response(jsonify(d.as_json()), 200)
 
         return abort(400, "Invalid type")
