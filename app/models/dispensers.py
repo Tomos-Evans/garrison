@@ -1,6 +1,10 @@
 from app import db
 from flask import url_for
 
+def optic_dispense(amount):
+    return amount
+
+
 class Dispenser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer, unique=True, index=True, nullable=False)
@@ -9,7 +13,7 @@ class Dispenser(db.Model):
     ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False, lazy='select')
 
     @classmethod
-    def from_params(cls, index, ingredient, volume, type='optic', dispense_function=lambda : None):
+    def from_params(cls, index, ingredient, volume, type='optic', dispense_function=lambda a: None):
         d = cls()
         d.index = index
         d.ingredient = ingredient
@@ -54,6 +58,22 @@ class Dispenser(db.Model):
             self.volume -= amount
             db.session.commit()
             return self.dispense_function(amount)
+
+    def change_type_to(self, type):
+        if type=='empty':
+            self.type = 'empty'
+            self.volume = 0
+            self.ingredient = None
+            self.dispense_function = lambda a: None
+            db.session.commit()
+        elif type == 'optic':
+            self.type = 'optic'
+            self.dispense_function = optic_dispense
+            db.session.commit()
+
+    def update_volume(self, volume):
+        self.volume = volume
+        db.session.commit()
 
     @staticmethod
     def swap_dispenser_location(d1, d2):
