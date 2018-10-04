@@ -49,3 +49,5 @@ class Actuator(StateMachine):
         if not current_app.config['TESTING']:
             time.sleep(2.5)
         board.setIOState(0, self.up_pin, 0)
+
+actuator = Actuator()

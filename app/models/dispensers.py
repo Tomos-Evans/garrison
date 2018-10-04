@@ -1,8 +1,14 @@
 from app import db
 from flask import url_for
 
-def optic_dispense(amount):
-    return amount
+def optic_dispense():
+    from app.mechanical.actuator import actuator
+
+    def f(amount):
+        for _ in range(amount):
+            actuator.press()
+        return amount
+    return f
 
 
 class Dispenser(db.Model):
@@ -68,7 +74,7 @@ class Dispenser(db.Model):
             db.session.commit()
         elif type == 'optic':
             self.type = 'optic'
-            self.dispense_function = optic_dispense
+            self.dispense_function = optic_dispense()
             db.session.commit()
 
     def update_volume(self, volume):
