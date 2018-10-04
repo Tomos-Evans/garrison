@@ -41,8 +41,9 @@ class Dispenser(db.Model):
         return {
             'location':self.location(),
             'index':self.index,
+            'type': self.type,
             'volume':self.volume,
-            'ingredient':self.ingredient.location()
+            'ingredient':self.ingredient.location() if self.ingredient else None
         }
 
     def location(self):
