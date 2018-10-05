@@ -1,6 +1,6 @@
 from test.apis import ApiTestCase
 from app.models.drinks import Ingredient, Dispenser
-
+from app.constants import DISPENSER_LOCS
 class TestDispenser(ApiTestCase):
     def setUp(self):
         super().setUp()
@@ -21,6 +21,10 @@ class TestDispenser(ApiTestCase):
 
         response = self.client.get('/api/dispensers/-1')
         self.assertEqual(response.status_code, 404)
+
+    def test_position(self):
+        self.assertEqual(self.d1.position, DISPENSER_LOCS[self.d1.index])
+        self.assertEqual(self.d2.position, DISPENSER_LOCS[self.d2.index])
 
 class TestDispenserPut(ApiTestCase):
     def setUp(self):

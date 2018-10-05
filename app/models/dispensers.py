@@ -1,5 +1,6 @@
 from app import db
 from flask import url_for
+from app.constants import DISPENSER_LOCS
 
 def optic_dispense():
     from app.mechanical.actuator import actuator
@@ -14,6 +15,7 @@ def optic_dispense():
 class Dispenser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer, unique=True, index=True, nullable=False)
+    position = db.Column(db.Integer, unique=True, index=True, nullable=False)
     type = db.Column(db.String(10), index=True)
     disabled = db.Column(db.Boolean(), index=True, nullable=False, default=True)
     volume = db.Column(db.Integer, nullable=False)
@@ -27,6 +29,7 @@ class Dispenser(db.Model):
         d.volume = volume
         d.type = type
         d.disabled = disabled
+        d.position = DISPENSER_LOCS[index]
         db.session.add(d)
         db.session.commit()
 
