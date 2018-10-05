@@ -28,7 +28,7 @@ class TestDispenserPut(ApiTestCase):
         self.i1_ref = Ingredient.from_params('vodka', True, 40).ref
         self.i2 = Ingredient.from_params('gin', True, 35)
         self.d1 = Dispenser.from_params(0,type='empty')
-        self.d2 = Dispenser.from_params(1,self.i2, 5000, type='optic', dispense_function=lambda a: a)
+        self.d2 = Dispenser.from_params(1,self.i2, 5000, type='optic', disabled=False, dispense_function=lambda a: a)
 
     def test_change_to_optic_needs_ing_and_vol(self):
         response = self.client.put('/api/dispensers/0', json={

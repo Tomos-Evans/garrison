@@ -15,16 +15,18 @@ class Dispenser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer, unique=True, index=True, nullable=False)
     type = db.Column(db.String(10), index=True)
+    disabled = db.Column(db.Boolean(), index=True, nullable=False, default=True)
     volume = db.Column(db.Integer, nullable=False)
     ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False, lazy='select')
 
     @classmethod
-    def from_params(cls, index, ingredient=None, volume=0, type='optic', dispense_function=lambda a: None):
+    def from_params(cls, index, ingredient=None, volume=0, type='optic', disabled=True, dispense_function=lambda a: None):
         d = cls()
         d.index = index
         d.ingredient = ingredient
         d.volume = volume
         d.type = type
+        d.disabled = disabled
         db.session.add(d)
         db.session.commit()
 
@@ -52,6 +54,7 @@ class Dispenser(db.Model):
             'location':self.location(),
             'index':self.index,
             'type': self.type,
+            'disabled': self.disabled,
             'volume':self.volume,
             'ingredient':self.ingredient.location() if self.ingredient else None
         }
@@ -65,17 +68,17 @@ class Dispenser(db.Model):
             db.session.commit()
             return self.dispense_function(amount)
 
-    def change_type_to(self, type):
-        if type=='empty':
-            self.type = 'empty'
-            self.volume = 0
-            self.ingredient = None
-            self.dispense_function = lambda a: None
-            db.session.commit()
-        elif type == 'optic':
-            self.type = 'optic'
-            self.dispense_function = optic_dispense()
-            db.session.commit()
+    def disable(self):
+        self.disabled = True
+        self.volume = 0
+        self.ingredient = None
+        self.dispense_function = lambda a: None
+        db.session.commit()
+
+    def enable(self):
+        self.disabled = False
+        self.dispense_function = optic_dispense()
+        db.session.commit()
 
     def update_volume(self, volume):
         self.volume = volume

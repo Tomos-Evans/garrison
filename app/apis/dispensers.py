@@ -15,7 +15,7 @@ class Dispensers(Resource):
         }
 
 put_parser = reqparse.RequestParser()
-put_parser.add_argument('type', type=str, help='Either "optic" or "empty"')
+put_parser.add_argument('disable', type=inputs.boolean, help='Disables the dispenser, loosing all state')
 put_parser.add_argument('ingredient', type=str, help='The ref of the ingredient that you want to give the dispenser. Ignored if type == "empty"')
 put_parser.add_argument('volume', type=str, help='updates the volume of the dispenser. Ignored if type == "empty"')
 
@@ -38,18 +38,18 @@ class SingleDispenser(Resource):
         args = put_parser.parse_args()
         ingredient = args.get('ingredient')
         volume = int(args.get('volume')) if args.get('volume') != None else None
-        type = args.get('type')
+        disable = args.get('disable') == True
 
         d = Dispenser.query.filter_by(index=index).first()
         if d == None:
             abort(404, "No dispenser with index: " + str(index))
 
-        if type == 'empty':
-            d.change_type_to('empty')
+        if disable:
+            d.disable()
             return make_response(jsonify(d.as_json()), 200)
 
-        if type == 'optic' and d.type =='optic':
-            # The dispenser is already a optic, so only changing volume is alowed
+        if not disable and not d.disabled:
+            # The dispenser is already enabled, so only changing volume is alowed
             if ingredient != None:
                 i = Ingredient.query.filter_by(ref=ingredient).first()
                 if i is None:
@@ -63,8 +63,9 @@ class SingleDispenser(Resource):
                 d.update_volume(volume)
             return make_response(jsonify(d.as_json()), 200)
 
-        if type == 'optic' and d.type != 'optic':
-            # The dispensor is not an optic, so it needs all info and to update
+        # if type == 'optic' and d.type != 'optic':
+        if not disable and d.disabled:
+            # The dispensor is disabled, so it needs all info and to update
             # its dispense method
             if ingredient == None or volume == None:
                 abort(400, "missing information")
@@ -77,10 +78,10 @@ class SingleDispenser(Resource):
                 abort(400, "Volume must be non negative")
 
             d.change_ingredient(i, volume)
-            d.change_type_to('optic')
+            d.enable()
             return make_response(jsonify(d.as_json()), 200)
-        if d.type != 'empty' and volume != None and volume >=0:
+        if not d.disabled and volume != None and volume >=0:
             d.update_volume(volume)
             return make_response(jsonify(d.as_json()), 200)
 
-        return abort(400, "Invalid type")
+        return abort(400, "Bad Request")
