@@ -33,7 +33,7 @@ class Ingredients(Resource):
         if Ingredient.query.filter_by(name=name).first():
             abort(409, "Name already in use")
         i = Ingredient.from_params(name, alcoholic, abs)
-        return make_response(jsonify(location=url_for('ingredients_ingredients') + i.ref, ref=i.ref), 201)
+        return make_response(jsonify(i.as_json()), 201)
 
 @ns.route('/<ref>')
 class SingleIngredient(Resource):

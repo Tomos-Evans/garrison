@@ -7,3 +7,4 @@ class ApiTestCase(TestCase):
 
 from .ingredients import *
 from .drinks import *
+from .dispensers import *
