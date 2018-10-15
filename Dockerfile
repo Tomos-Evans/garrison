@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the app directory and other files into the container
 COPY app app
 COPY migrations migrations
-COPY garrison.py config.py boot.sh ./
+COPY garrison.py config.py boot.sh generate_dispensers.py ./
 RUN chmod +x boot.sh
 
 # Create the nessisary environment variables
@@ -29,8 +29,5 @@ USER garrison
 # Expose port 5000
 EXPOSE 5000
 
-#flask db upgrade
-
-# Start the gunicorn server listening on port 5000
+# Run the startup script
 ENTRYPOINT ["./boot.sh"]
-#CMD [ "gunicorn", "-b", ":5000", "--access-logfile", "-", "--error-logfile", "-", "garrison:app" ]
