@@ -5,7 +5,7 @@ RUN adduser --shell /bin/bash --disabled-login --quiet --gecos "" garrison
 WORKDIR /home/garrison
 
 # Install Gunicorn server
-RUN pip install gunicorn
+RUN pip install gunicorn psycopg2
 
 # Copy and install the requirements
 COPY requirements.txt requirements.txt

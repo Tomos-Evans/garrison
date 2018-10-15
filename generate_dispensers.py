@@ -1,6 +1,6 @@
 from app import db, create_app
-from config import DevelopmentConfig
-application = create_app(DevelopmentConfig)
+from config import Config
+application = create_app(Config)
 
 from app.models.dispensers import Dispenser
 

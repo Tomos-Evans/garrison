@@ -15,8 +15,6 @@ class Config():
 
     # Mechanical
     FAKE_GPIO = os.environ.get('FAKE_GPIO') in ['1', 'true', 'True']
-    if FAKE_GPIO:
-        print("Faking GPIO interactions. User FAKE_GPIO=False env var to change.")
 
 class TestingConfig(Config):
     TESTING=True
