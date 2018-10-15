@@ -1,8 +1,8 @@
 from app import create_app
-from config import Config, DevelopmentConfig
+from config import Config
 from app import db
 
-app = create_app(DevelopmentConfig)
+app = create_app(Config)
 
 @app.shell_context_processor
 def make_shell_context():

@@ -14,12 +14,11 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Mechanical
-    FAKE_GPIO = os.environ.get('FAKE_GPIO') or False
+    FAKE_GPIO = os.environ.get('FAKE_GPIO') in ['1', 'true', 'True']
+    if FAKE_GPIO:
+        print("Faking GPIO interactions. User FAKE_GPIO=False env var to change.")
 
-
-class DevelopmentConfig(Config):
-    FAKE_GPIO=True
-
-class TestingConfig(DevelopmentConfig):
+class TestingConfig(Config):
     TESTING=True
+    FAKE_GPIO=True
     SQLALCHEMY_DATABASE_URI='sqlite://'
