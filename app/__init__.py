@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_restplus import Api
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from app import constants
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 from app import models
 
@@ -13,7 +15,7 @@ def create_app(config):
     constants.FAKE_GPIO = app.config['FAKE_GPIO']
 
     db.init_app(app)
-
+    migrate.init_app(app, db)
     api = Api(title="The Garrison API",
                 version=app.config['API_VERSION'],
                 description='The backend API to interface with The Garrison.',

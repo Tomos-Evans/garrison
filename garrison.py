@@ -1,8 +1,13 @@
 from app import create_app
-from config import Config, DevelopmentConfig
+from config import Config
 from app import db
 
-app = create_app(DevelopmentConfig)
+app = create_app(Config)
+
+if app.config['FAKE_GPIO']:
+    print("Faking GPIO interactions. User FAKE_GPIO=False env var to change.")
+print("Garrison version: ", app.config['API_VERSION'])
+print("Attempting to use db at: ", app.config['SQLALCHEMY_DATABASE_URI'])
 
 @app.shell_context_processor
 def make_shell_context():
