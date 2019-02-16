@@ -105,3 +105,4 @@ venv.bak/
 
 scratch.py
 app.db
+.idea/
