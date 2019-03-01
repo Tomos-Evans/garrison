@@ -1,6 +1,7 @@
 from test.apis import ApiTestCase
 from app.models.drinks import Ingredient, DrinkComponent, Drink
 
+
 class TestDrink(ApiTestCase):
     def setUp(self):
         super().setUp()

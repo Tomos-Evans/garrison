@@ -1,21 +1,29 @@
-from flask_restplus import Resource, Namespace, abort, reqparse
-from flask import current_app, jsonify, make_response, url_for, request
+from flask_restplus import Resource, Namespace, abort, fields
+from flask import jsonify, make_response, url_for, request
 from app.models.drinks import Drink, DrinkComponent, Ingredient
 
 ns = Namespace('drinks', description="The Menu")
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('name', type=str, help='The name of the drink', required=True)
-post_parser.add_argument('ingredients', type=list, location='json', help='A list of json objects \{ref: <ingredient ref>, measure: <amount in ml>\}', required=True)
+ingredient_model = ns.model('IngredientModel', {
+    'ref': fields.String(required=True),
+    'measure': fields.Integer(min=0),
+})
+
+drink_model = ns.model('DrinkModel', {
+    'name': fields.String(required=True),
+    'ingredients': fields.List(fields.Nested(ingredient_model)),
+})
+
 
 @ns.route('/')
 class Drinks(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         return {
             'drinks': list(map(lambda d: d.as_json(), Drink.query.all()))
         }
 
-    @ns.doc(parser=post_parser)
+    @ns.expect(drink_model)
     @ns.response(201, 'Created')
     @ns.response(400, 'Bad request')
     @ns.response(409, 'Name conflict')
@@ -48,7 +56,8 @@ class Drinks(Resource):
         if len(components) == 0:
             return make_response(jsonify(message="Drink must contain ingredients"), 400)
         d = Drink.from_params(name, components)
-        return make_response(jsonify(href=url_for('drinks_drinks') + d.ref), 201)
+        return make_response(jsonify(ref=url_for('drinks_drinks') + d.ref), 201)
+
 
 @ns.route('/<ref>')
 class SingleDrink(Resource):
