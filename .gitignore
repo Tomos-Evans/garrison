@@ -106,3 +106,7 @@ venv.bak/
 scratch.py
 app.db
 .idea/
+
+*.DS_STORE
+app/templates
+app/static

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask.logging import default_handler
 import logging
 from flask_restplus import Api
@@ -13,7 +13,6 @@ logger.addHandler(default_handler)
 
 db = SQLAlchemy()
 migrate = Migrate()
-
 
 def create_app(config):
     app = Flask(__name__)
@@ -51,5 +50,10 @@ def create_app(config):
 
     from app.bar_tender import BarTender
     app.bar_tender = BarTender()
+
+    @app.route('/')
+    @app.route('/index.html')
+    def index():
+        return render_template('index.html')
 
     return app
