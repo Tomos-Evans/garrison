@@ -1,18 +1,18 @@
 from app.constants import FAKE_GPIO
 
+
 class FakeMotor:
-    def move(self, amount, talk=True):
+    def move(self, amount):
         if amount<0:
-            if talk:
-                print("Slush Engine moving left", -amount, "steps")
+            print("Slush Engine moving left", -amount, "steps")  # TODO: This should be logging, not print
             return -amount
         else:
-            if talk:
-                print("Slush Engine moving right", + amount, "steps")
+            print("Slush Engine moving right", + amount, "steps")  # TODO: This should be logging, not print
             return amount
 
     def isBusy(self):
         return False
+
 
 class FakeBoard:
     def setIOState(self, a, b, c):

@@ -1,13 +1,15 @@
 from test.apis import ApiTestCase
 from app.models.drinks import Ingredient, Dispenser
 from app.constants import DISPENSER_LOCS
+
+
 class TestDispenser(ApiTestCase):
     def setUp(self):
         super().setUp()
         self.i1 = Ingredient.from_params('vodka', True, 40)
         self.i2 = Ingredient.from_params('gin', True, 35)
-        self.d1 = Dispenser.from_params(0,self.i1, 1000)
-        self.d2 = Dispenser.from_params(1,self.i2, 500)
+        self.d1 = Dispenser.from_params(0, self.i1, 1000)
+        self.d2 = Dispenser.from_params(1, self.i2, 500)
 
     def test_get_all(self):
         response = self.client.get('/api/dispensers/')
@@ -26,23 +28,24 @@ class TestDispenser(ApiTestCase):
         self.assertEqual(self.d1.position, DISPENSER_LOCS[self.d1.index])
         self.assertEqual(self.d2.position, DISPENSER_LOCS[self.d2.index])
 
+
 class TestDispenserPut(ApiTestCase):
     def setUp(self):
         super().setUp()
         self.i1_ref = Ingredient.from_params('vodka', True, 40).ref
         self.i2 = Ingredient.from_params('gin', True, 35)
-        self.d1 = Dispenser.from_params(0,type='empty')
-        self.d2 = Dispenser.from_params(1,self.i2, 5000, type='optic', disabled=False, dispense_function=lambda a: a)
+        self.d1 = Dispenser.from_params(0,dispenser_type='empty')
+        self.d2 = Dispenser.from_params(1,self.i2, 5000, dispenser_type='optic', disabled=False)
 
     def test_change_to_optic_needs_ing_and_vol(self):
         response = self.client.put('/api/dispensers/0', json={
-            'type':'optic'
+            'type': 'optic'
         })
         self.assertEqual(response.status_code, 400)
 
         response = self.client.put('/api/dispensers/0', json={
-            'type':'optic',
-            'volume':1000
+            'type': 'optic',
+            'volume': 1000
         })
         self.assertEqual(response.status_code, 400)
 
@@ -54,7 +57,7 @@ class TestDispenserPut(ApiTestCase):
 
         response = self.client.put('/api/dispensers/0', json={
             'type':'optic',
-            'ingredient':self.i1_ref,
+            'ingredient': self.i1_ref,
             'volume': 200
         })
         self.assertEqual(response.status_code, 200)
@@ -80,6 +83,7 @@ class TestDispenserPut(ApiTestCase):
             'volume':20
         })
         self.assertEqual(response.status_code, 200)
+
     def test_invalid_ing(self):
         response = self.client.put('/api/dispensers/0', json={
             'type': 'optic',

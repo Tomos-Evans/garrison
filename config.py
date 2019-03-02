@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-
+import app.constants
 base_dir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(base_dir, '.env'))
 
@@ -15,6 +15,8 @@ class Config():
 
     # Mechanical
     FAKE_GPIO = os.environ.get('FAKE_GPIO') in ['1', 'true', 'True']
+    app.constants.FAKE_GPIO = FAKE_GPIO
+
 
 class TestingConfig(Config):
     TESTING=True

@@ -10,7 +10,7 @@ class Ingredient(db.Model):
     alcoholic = db.Column(db.Boolean(), index=True, nullable=False)
     abs = db.Column(db.Integer())
     drinkComponents = db.relationship('DrinkComponent',  backref='ingredient', lazy='dynamic')
-    dispenser_id      = db.Column(db.Integer, db.ForeignKey('dispenser.id'), nullable=True)
+    dispenser_id = db.Column(db.Integer, db.ForeignKey('dispenser.id'), nullable=True)
 
     def __str__(self):
         if self.alcoholic:

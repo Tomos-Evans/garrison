@@ -2,6 +2,7 @@ from config import TestingConfig
 import unittest
 from app import create_app, db
 
+
 class TestCase(unittest.TestCase):
 
     def setUp(self):
@@ -13,7 +14,3 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-
-from test.mechanical import *
-from test.models import *
-from test.apis import *

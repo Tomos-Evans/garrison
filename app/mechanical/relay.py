@@ -7,8 +7,8 @@ class Relay(StateMachine):
         super().__init__()
         self.add(State('high'))
         self.add(State('low', is_starting_state=True))
-        self.add(Transition('high', ['low'], after=lambda : self._change_low ))
-        self.add(Transition('low', ['high'], after=lambda : self._change_high ))
+        self.add(Transition('high', ['low'], after=self._change_low))
+        self.add(Transition('low', ['high'], after=self._change_high))
 
         self.pin_number = pin_number
 

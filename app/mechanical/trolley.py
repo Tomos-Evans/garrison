@@ -1,20 +1,21 @@
 from statemachine import StateMachine, State, Transition
 from app.constants import HOME_POS, MAX_RIGHT
 
+
 class Trolley(StateMachine):
     def __init__(self, stepper):
         super().__init__()
-        self.add(State('idle', is_starting_state=True, will_enter=self.idle, will_exit=self.localise))
+        self.add(State('idle', will_enter=self.idle, will_exit=self.localise))
         self.add(State('moving'))
-        self.add(State('stopped'))
+        self.add(State('stopped', is_starting_state=True))
         self.add(Transition('idle', ['stopped']))
         self.add(Transition('stopped', ['moving', 'idle']))
         self.add(Transition('moving', ['stopped']))
 
         self.stepper = stepper
+        self.current_pos = None
 
-        self.go_home()
-        self.idle()
+        self.transition_to('idle')
 
     def go_home(self):
         return self.move_to(HOME_POS)
@@ -42,9 +43,14 @@ class Trolley(StateMachine):
         self.current_pos = pos
 
     def localise(self):
-        # move left until the limit switch is reached
+        self.powerise()
+        # TODO move left until the limit switch is reached
         self.current_pos = 0
 
     def idle(self):
-        # Relax the stepper
+        # TODO Relax the stepper
+        pass
+
+    def powerise(self):
+        # TODO turn on the stepper
         pass

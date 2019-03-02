@@ -25,6 +25,7 @@ class TestDispenserCreation(TestCase):
         self.assertEqual(i.dispenser, d)
         self.assertEqual(d.volume, 500)
 
+
 class TestDispenserVolume(TestCase):
     def setUp(self):
         super().setUp()
@@ -41,19 +42,18 @@ class TestDispenserVolume(TestCase):
         self.assertEqual(self.dispenser.has_used(100), 900)
         self.assertRaises(Exception, lambda : self.dispenser.has_used(-1))
 
-class TestDispeserDispense(TestCase):
+
+class TestDispenserDispense(TestCase):
     def setUp(self):
         super().setUp()
         self.ingredient = Ingredient.from_params('water', alcoholic=False)
         self.dispenser = Dispenser.from_params(0, self.ingredient, 1000)
 
     def test_pass_in_function(self):
-        d1 = Dispenser.from_params(1, self.ingredient, 1000, dispense_function=lambda a: 1)
-        d2 = Dispenser.from_params(2, self.ingredient, 1000, dispense_function=lambda a: 2)
+        d2 = Dispenser.from_params(2, self.ingredient, 1000, disabled=False)
 
-        self.assertEqual(d1.dispense(100), 1)
-        self.assertEqual(d2.dispense(100), 2)
-        self.assertEqual(d1.volume, 900)
+        self.assertEqual(d2.dispense(100), 100)
+        self.assertEqual(d2.volume, 900)
 
 
 class TestDispenserIndex(TestCase):

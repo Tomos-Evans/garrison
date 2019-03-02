@@ -2,6 +2,7 @@ from app import db
 from flask import url_for
 from app.constants import DISPENSER_LOCS
 
+
 def optic_dispense():
     from app.mechanical.actuator import actuator
 
@@ -12,28 +13,31 @@ def optic_dispense():
     return f
 
 
+def test_dispense():
+    return lambda a: a
+
+
 class Dispenser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer, unique=True, index=True, nullable=False)
     position = db.Column(db.Integer, unique=True, index=True, nullable=False)
-    type = db.Column(db.String(10), index=True)
+    dispenser_type = db.Column(db.String(10), index=True)
     disabled = db.Column(db.Boolean(), index=True, nullable=False, default=True)
     volume = db.Column(db.Integer, nullable=False)
     ingredient = db.relationship('Ingredient',  backref='dispenser', uselist=False, lazy='select')
 
     @classmethod
-    def from_params(cls, index, ingredient=None, volume=0, type='optic', disabled=True, dispense_function=lambda a: None):
+    def from_params(cls, index, ingredient=None, volume=0, dispenser_type='optic', disabled=True):
         d = cls()
         d.index = index
         d.ingredient = ingredient
         d.volume = volume
-        d.type = type
+        d.dispenser_type = dispenser_type
         d.disabled = disabled
         d.position = DISPENSER_LOCS[index]
         db.session.add(d)
         db.session.commit()
 
-        d.dispense_function = dispense_function
         return d
 
     def change_ingredient(self, ingredient, volume):
@@ -56,7 +60,7 @@ class Dispenser(db.Model):
         return {
             'location':self.location(),
             'index':self.index,
-            'type': self.type,
+            'type': self.dispenser_type,
             'disabled': self.disabled,
             'volume':self.volume,
             'ingredient':self.ingredient.location() if self.ingredient else None
@@ -66,21 +70,26 @@ class Dispenser(db.Model):
         return url_for('dispensers_dispensers') + str(self.index)
 
     def dispense(self, amount):
-        if self.has(amount):
-            self.volume -= amount
+        if self.has(amount) and not self.disabled:
+            if self.dispenser_type == 'optic':
+                dispense_function = optic_dispense()
+            else:
+                dispense_function = test_dispense()
+
+            used = dispense_function(amount)
+            self.volume -= used
             db.session.commit()
-            return self.dispense_function(amount)
+            return used
+        return None
 
     def disable(self):
         self.disabled = True
         self.volume = 0
         self.ingredient = None
-        self.dispense_function = lambda a: None
         db.session.commit()
 
     def enable(self):
         self.disabled = False
-        self.dispense_function = optic_dispense()
         db.session.commit()
 
     def update_volume(self, volume):

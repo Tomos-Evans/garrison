@@ -1,18 +1,19 @@
 from statemachine import StateMachine, State, Transition
 import time
-from app.constants import ACTUATOR_UP_PIN, ACTUATOR_DOWN_PIN
+from app import constants
 from app.mechanical.slush_engine import board
 from flask import current_app
 
+
 class Actuator(StateMachine):
-    def __init__(self, up_pin=ACTUATOR_UP_PIN, down_pin=ACTUATOR_DOWN_PIN):
+    def __init__(self, up_pin=constants.ACTUATOR_UP_PIN, down_pin=constants.ACTUATOR_DOWN_PIN):
         super().__init__()
         self.add(State('raised'))
         self.add(State('lowered'))
         self.add(State('idle', is_starting_state=True, will_exit=self._localise))
         self.add(Transition('idle', ['lowered']))
-        self.add(Transition('lowered', ['raised'], before=lambda : self._raise ))
-        self.add(Transition('raised', ['lowered'], before=lambda : self._lower ))
+        self.add(Transition('lowered', ['raised'], before=self._raise))
+        self.add(Transition('raised', ['lowered'], before=self._lower))
 
         self.up_pin = up_pin
         self.down_pin = down_pin
@@ -28,12 +29,14 @@ class Actuator(StateMachine):
         self.transition_to('lowered')
 
     def _raise(self):
+        print("Actuator going up")
         board.setIOState(0, self.up_pin, 1)
         if not current_app.config['TESTING']:
             time.sleep(constants.ACTUATOR_TRAVEL_TIME)
         board.setIOState(0, self.up_pin, 0)
 
     def _lower(self):
+        print("Actuator going down")
         board.setIOState(0, self.down_pin, 1)
         if not current_app.config['TESTING']:
             time.sleep(constants.ACTUATOR_TRAVEL_TIME)
@@ -49,5 +52,6 @@ class Actuator(StateMachine):
         if not current_app.config['TESTING']:
             time.sleep(2.5)
         board.setIOState(0, self.up_pin, 0)
+
 
 actuator = Actuator()
