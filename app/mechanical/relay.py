@@ -1,5 +1,7 @@
 from app.constants import FAKE_GPIO
 from statemachine import StateMachine, State, Transition
+from app import logger
+
 
 class Relay(StateMachine):
 
@@ -21,6 +23,7 @@ class Relay(StateMachine):
             self.transition_to('low')
 
     def _change_high(self):
+        logger.debug("Relay change high")
         if FAKE_GPIO:
             pass
         else:
@@ -28,6 +31,7 @@ class Relay(StateMachine):
             pass
 
     def _change_low(self):
+        logger.debug("Relay change low")
         if FAKE_GPIO:
             pass
         else:

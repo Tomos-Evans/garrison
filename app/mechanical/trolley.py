@@ -1,5 +1,8 @@
 from statemachine import StateMachine, State, Transition
 from app.constants import HOME_POS, MAX_RIGHT
+from app import logger
+from flask import current_app
+from app.logging_helpers import wrap_in_logs
 
 
 class Trolley(StateMachine):
@@ -17,22 +20,28 @@ class Trolley(StateMachine):
 
         self.transition_to('idle')
 
+    @wrap_in_logs("Moving Trolley to home position", "Trolley is at home position")
     def go_home(self):
-        return self.move_to(HOME_POS)
+        r = self.move_to(HOME_POS)
+        return r
 
+    @wrap_in_logs("Trolley starting move", "Trolley finished move")
     def move_to(self, pos):
         if self.can_transition_to('moving'):
             if pos < 0:
-                self.__move_to(0)
+                pos = 0
             elif pos > MAX_RIGHT:
-                self.__move_to(MAX_RIGHT)
-            else:
-                self.__move_to(pos)
+                pos = MAX_RIGHT
+
+            logger.debug(f"Move Trolley to position {pos}cm")
+            self.__move_to(pos)
             return self.current_pos
         elif self.current_state.name == 'idle' and self.can_transition_to('stopped'):
+            logger.debug(f"Trolley is IDLE, needs to localise prior to moving to position")
             self.transition_to('stopped')
             return self.move_to(pos)
 
+        current_app.logger.critical(f"Trolley state is unexpected: {self.current_state.name}")
         raise Exception
 
     def __move_to(self, pos):
@@ -42,15 +51,18 @@ class Trolley(StateMachine):
         self.transition_to('stopped')
         self.current_pos = pos
 
+    @wrap_in_logs("Localising Trolley", "Trolley is Localised")
     def localise(self):
         self.powerise()
         # TODO move left until the limit switch is reached
         self.current_pos = 0
 
+    @wrap_in_logs("Trolley is going idle")
     def idle(self):
         # TODO Relax the stepper
         pass
 
+    @wrap_in_logs("Powering the trolley")
     def powerise(self):
         # TODO turn on the stepper
         pass

@@ -1,5 +1,7 @@
 from statemachine import StateMachine, State, Transition
 from app.mechanical import Trolley, Stepper
+from app import logger
+from app.logging_helpers import wrap_in_logs
 
 
 class BTException(Exception):
@@ -31,10 +33,13 @@ class BarTender(StateMachine):
 
         self.trolley = Trolley(Stepper())
 
+    @wrap_in_logs("Bartender attempting to make drink", "Bartender ready to recieve orders")
     def make(self, drink):
         if not self.can_make(drink):
+            logger.info(f"Bartender cannot make {drink.name}")
             raise BTCannotCompleteOrder('bartender cannot complete that order.')
         if self.is_busy:
+            logger.info(f"Bartender is busy, cannot handle request")
             raise BTBusy('cannot make a drink when the bartender is busy.')
 
         self.transition_to('busy')

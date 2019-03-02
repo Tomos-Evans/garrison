@@ -1,8 +1,9 @@
 from statemachine import StateMachine, State, Transition
 import time
-from app import constants
+from app import constants, logger
 from app.mechanical.slush_engine import board
 from flask import current_app
+from app.logging_helpers import wrap_in_logs
 
 
 class Actuator(StateMachine):
@@ -18,6 +19,7 @@ class Actuator(StateMachine):
         self.up_pin = up_pin
         self.down_pin = down_pin
 
+    @wrap_in_logs("Pressing Actuator", "Pressed")
     def press(self):
         if self.current_state.name is not 'lowered':
             self.transition_to('lowered')
@@ -28,20 +30,21 @@ class Actuator(StateMachine):
             time.sleep(constants.TIME_TO_EMPTY_OPTIC)
         self.transition_to('lowered')
 
+    @wrap_in_logs("Raising Actuator", "Raised")
     def _raise(self):
-        print("Actuator going up")
         board.setIOState(0, self.up_pin, 1)
         if not current_app.config['TESTING']:
             time.sleep(constants.ACTUATOR_TRAVEL_TIME)
         board.setIOState(0, self.up_pin, 0)
 
+    @wrap_in_logs("Lowering Actuator", "Lowered")
     def _lower(self):
-        print("Actuator going down")
         board.setIOState(0, self.down_pin, 1)
         if not current_app.config['TESTING']:
             time.sleep(constants.ACTUATOR_TRAVEL_TIME)
         board.setIOState(0, self.down_pin, 0)
 
+    @wrap_in_logs("Localising Actuator", "Actuator is Localised")
     def _localise(self):
         board.setIOState(0, self.down_pin, 1)
         if not current_app.config['TESTING']:

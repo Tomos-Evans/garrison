@@ -1,9 +1,15 @@
 from flask import Flask
+from flask.logging import default_handler
+import logging
 from flask_restplus import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from app import constants
+
+logger = logging.getLogger('logger')
+logger.setLevel('DEBUG')
+logger.addHandler(default_handler)
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -11,16 +17,22 @@ migrate = Migrate()
 
 def create_app(config):
     app = Flask(__name__)
+    app.logger.info("Creating new application")
     CORS(app, resources={r"/api/*": {'origins': '*'}})
     app.config.from_object(config)
     constants.FAKE_GPIO = app.config['FAKE_GPIO']
+
+    app.logger.info(f"FAKE_GPIO: {app.config['FAKE_GPIO']}")
+    app.logger.info(f"Garrison version: {app.config['API_VERSION']}")
+    app.logger.info(f"Attempting to use db at: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
     db.init_app(app)
     migrate.init_app(app, db)
     api = Api(title="The Garrison API",
               version=app.config['API_VERSION'],
               description='The backend API to interface with The Garrison.',
-              prefix='/api')
+              prefix='/api',
+              doc='/docs/api')
 
     api.namespaces.pop(0)
 
