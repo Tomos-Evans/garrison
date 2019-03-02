@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask.logging import default_handler
 import logging
 from flask_restplus import Api
@@ -45,6 +45,8 @@ def create_app(config):
     api.add_namespace(dispensers_ns)
     from app.apis.orders import ns as orders_ns
     api.add_namespace(orders_ns)
+    from app.apis.images import ns as images_ns
+    api.add_namespace(images_ns)
 
     api.init_app(app)
 
