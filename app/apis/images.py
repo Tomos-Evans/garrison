@@ -13,4 +13,4 @@ class Images(Resource):
             r = requests.get(url)
             return jsonify(r.json())
         except Exception:
-            return 'https://media.licdn.com/dms/image/C4E03AQFqPA_LxawS7w/profile-displayphoto-shrink_800_800/0?e=1556755200&v=beta&t=mmZjGheYXuFeUK6bQ1cOSmTv46G5Bf46B8lHwPJrT1A', 200
+            return '', 200
