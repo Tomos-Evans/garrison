@@ -51,18 +51,14 @@ class Trolley(StateMachine):
         self.transition_to('stopped')
         self.current_pos = pos
 
+    def move_left_until_bump(self):
+        self.stepper.move_relative(0)  # TODO: implement
+
     @wrap_in_logs("Localising Trolley", "Trolley is Localised")
     def localise(self):
-        self.powerise()
-        # TODO move left until the limit switch is reached
+        self.move_left_until_bump()
         self.current_pos = 0
 
     @wrap_in_logs("Trolley is going idle")
     def idle(self):
-        # TODO Relax the stepper
-        pass
-
-    @wrap_in_logs("Powering the trolley")
-    def powerise(self):
-        # TODO turn on the stepper
-        pass
+        self.stepper.motor.free()

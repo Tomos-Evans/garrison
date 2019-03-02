@@ -21,6 +21,10 @@ class FakeMotor:
     def isBusy():
         return False
 
+    @wrap_in_logs(before="Will free the Slush motor", after="Slush motor freed")
+    def free(self):
+        pass
+
 
 class FakeBoard:
     def setIOState(self, a, b, c):
@@ -60,6 +64,9 @@ else:
         def isBusy(self):
             return self.s_motor.isBusy()
 
+        @wrap_in_logs(before="Will free the Slush motor", after="Slush motor freed")
+        def free(self):
+            self.s_motor.free()
 
     board = WrappedBoard(Slush.sBoard())
     motor = WrappedMotor(Slush.Motor(constants.MOTOR_NUMBER))

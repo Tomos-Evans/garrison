@@ -50,6 +50,7 @@ class BarTender(StateMachine):
             dispenser.dispense(component.measure)
 
         self.trolley.go_home()
+        self.trolley.transition_to('idle')
 
         self.transition_to('waiting')
 
