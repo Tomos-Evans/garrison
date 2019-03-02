@@ -5,7 +5,7 @@ STEPS_PER_CM                    = 810
 MOTOR_NUMBER                    = 0
 
 # Trolley Settings
-HOME_POS                        = 45.5
+HOME_POS                        = 0
 MAX_RIGHT                       = 88
 
 # Actuator Settings
