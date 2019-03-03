@@ -1,5 +1,5 @@
 from statemachine import StateMachine, State, Transition
-from app.constants import HOME_POS, MAX_RIGHT
+from app.constants import HOME_POS, MAX_RIGHT, LIMIT_SWITCH_STANDOFF
 from app import logger
 from flask import current_app
 from app.logging_helpers import wrap_in_logs
@@ -51,13 +51,12 @@ class Trolley(StateMachine):
         self.transition_to('stopped')
         self.current_pos = pos
 
-    def move_left_until_bump(self):
-        self.stepper.move_relative(0)  # TODO: implement
-
     @wrap_in_logs("Localising Trolley", "Trolley is Localised")
     def localise(self):
-        self.move_left_until_bump()
-        self.current_pos = 0
+        self.stepper.motor.goUntilPress(0, 0, 15000)  # (Normally open, left, speed)
+        self.stepper.move_right(LIMIT_SWITCH_STANDOFF)
+        self.current_pos = LIMIT_SWITCH_STANDOFF
+
 
     @wrap_in_logs("Trolley is going idle")
     def idle(self):
