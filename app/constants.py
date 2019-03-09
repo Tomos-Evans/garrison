@@ -3,9 +3,10 @@ FAKE_GPIO=None
 # Stepper Settings
 STEPS_PER_CM                    = 810
 MOTOR_NUMBER                    = 0
+LIMIT_SWITCH_STANDOFF           = 2
 
 # Trolley Settings
-HOME_POS                        = 0
+HOME_POS                        = 5  # WARNING: This cannot be set to less than LIMIT_SWITCH_STANDOFF due to the limit switch
 MAX_RIGHT                       = 88
 
 # Actuator Settings

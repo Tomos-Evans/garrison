@@ -25,8 +25,15 @@ class FakeMotor:
     def free(self):
         pass
 
+    @wrap_in_logs(before="Moving Slush Motor until press", after="Slush motor pressed limit switch")
+    def goUntilPress(self, no, direction, speed):
+        direction = "left" if direction == 0 else "right"
+        switch = "NO" if no == 0 else "NC"
+        logger.debug(f"Slush Motor moving {direction} to a {switch} switch at a speed of {speed}")
+
 
 class FakeBoard:
+
     def setIOState(self, a, b, c):
         pass
 
@@ -67,6 +74,13 @@ else:
         @wrap_in_logs(before="Will free the Slush motor", after="Slush motor freed")
         def free(self):
             self.s_motor.free()
+
+        @wrap_in_logs(before="Moving Slush Motor until press", after="Slush motor pressed limit switch")
+        def goUntilPress(self, no, direction, speed):
+            d = "left" if direction == 0 else "right"
+            switch = "NO" if no == 0 else "NC"
+            logger.debug(f"Slush Motor moving {d} to a {switch} switch at a speed of {speed}")
+            self.s_motor.goUntilPress(no, direction, speed)
 
     board = WrappedBoard(Slush.sBoard())
     motor = WrappedMotor(Slush.Motor(constants.MOTOR_NUMBER))
