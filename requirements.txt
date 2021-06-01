@@ -29,5 +29,5 @@ six==1.11.0
 SQLAlchemy==1.2.10
 -e git+https://github.com/Tomos-Evans/statemachine.git@e88b05f60a2eeb9b6c3019de1baec0ca31375a54#egg=statemachine
 typed-ast==1.1.0
-urllib3==1.23
+urllib3==1.26.5
 Werkzeug==0.14.1
