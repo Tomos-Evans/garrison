@@ -15,7 +15,7 @@ idna==2.7
 itsdangerous==0.24
 Jinja2==2.10
 jsonschema==2.6.0
-Mako==1.0.7
+Mako==1.2.2
 MarkupSafe==1.0
 more-itertools==4.3.0
 pluggy==0.7.1
